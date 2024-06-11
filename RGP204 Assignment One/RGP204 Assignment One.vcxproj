@@ -148,11 +148,17 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\vampi\source\SFML-2.6.1-windows-vc17-64-bit\SFML-2.6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RedStage.cpp" />
+    <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="StageManager.cpp" />
+    <ClCompile Include="BlueStage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="GameTextures.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Stage.hpp" />
+    <ClInclude Include="StageManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

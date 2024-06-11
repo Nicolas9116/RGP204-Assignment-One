@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-Game::Game() : window(sf::VideoMode(1920, 1080), "One Button Game"), gameTextures(), player(gameTextures.playerTex)
+Game::Game() : window(sf::VideoMode(1920, 1080), "One Button Game"), gameTextures(), player(gameTextures.playerTex), stageManager()
 {
 	window.setFramerateLimit(60);
 
@@ -28,10 +28,14 @@ void Game::Run()
 				}
 			}
 		}
+		stageManager.Update();
 
 		window.clear();
 
+		
+		stageManager.Draw(window);
 		window.draw(player.GetPlayerSprite());
+
 
 		window.display();
 	}

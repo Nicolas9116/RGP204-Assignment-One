@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameTextures.hpp"
 #include "Player.hpp"
+#include "StageManager.hpp"
 
 
 class Game
@@ -17,5 +18,6 @@ private:
 	sf::RenderWindow window;
 	GameTextures gameTextures;
 	Player player;
+	StageManager stageManager;
 };
 
