@@ -3,20 +3,24 @@
 #include <memory>
 #include "Stage.hpp"
 
+class Player;
+
 class StageManager
 {
 public:
-	StageManager();
+	StageManager(const int& groundLevel);
 
-	void Update();
+	void Update(Player& player);
 	void Draw(sf::RenderWindow& window);
 	int GenerateRandomStage(int totalNumberOfStages, int lastStage);
 	void InitialStageSetup();
-	void LoadStage();
+	void LoadStage(int& groundLevel);
+	std::shared_ptr<Stage> GetCurrentStage() { return m_currentStage; }
 private:
 	int lastStage;
 	int totalNumberOfStages = 2;
-	int m_currentStage;
-	std::vector<std::unique_ptr<Stage>> m_stages;
+	std::shared_ptr<Stage> m_currentStage;
+	int m_groundLevel;
+	std::vector<std::shared_ptr<Stage>> m_stages;
 };
 

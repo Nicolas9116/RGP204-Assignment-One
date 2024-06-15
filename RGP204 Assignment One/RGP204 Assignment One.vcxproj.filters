@@ -33,10 +33,10 @@
     <ClCompile Include="Stage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BlueStage.cpp">
+    <ClCompile Include="RedStage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RedStage.cpp">
+    <ClCompile Include="BlueStage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BlueStage.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameTextures.cpp" />
     <ClCompile Include="main.cpp">
@@ -151,7 +152,6 @@
     <ClCompile Include="RedStage.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageManager.cpp" />
-    <ClCompile Include="BlueStage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp" />

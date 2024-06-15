@@ -4,8 +4,8 @@
 
 // Include other stage subclasses...
 
-StageManager::StageManager()
-	: lastStage(0)
+StageManager::StageManager(const int& groundLevel)
+	: lastStage(0), m_groundLevel(groundLevel)
 {
 	InitialStageSetup();
 }
@@ -14,30 +14,50 @@ StageManager::StageManager()
 void StageManager::Draw(sf::RenderWindow& window)
 {
 	for (auto& stage : m_stages) {
-		stage->Draw(window);	
+		stage->Draw(window);
 	}
 }
 
-void StageManager::Update()
+void StageManager::Update(Player& player)
 {
-	for (auto& stage : m_stages) {
-		stage->Update();
+	if (!m_stages.empty())
+	{
+		m_currentStage = m_stages[0];
+		std::cout << "Current stage: " << m_currentStage->GetStageType() << std::endl;	
+	}
+
+
+	if (!m_stages.empty() && m_stages.front()->GetIsOffScreen()) {
+		// Remove the first stage
+		m_stages.erase(m_stages.begin());
+		std::cout << "stage erased" << std::endl;
+		// Load a new stage at the end
+		LoadStage(m_groundLevel);
+
+		// Adjust the position of the new stage
+		auto& newStage = m_stages.back();
+		newStage->GetSprite().setPosition(960 + (m_stages.size() - 1) * 1920, 540);
+	}
+	for (auto& stage : m_stages)
+	{
+		stage->IsOffScreen();
+		stage->Update(player);
 	}
 }
 
-void StageManager::LoadStage()
+void StageManager::LoadStage(int& groundLevel)
 {
 	int randomStage = GenerateRandomStage(totalNumberOfStages, lastStage);
 
 
-	std::unique_ptr<Stage> stage; // Changed to std::unique_ptr
+	std::shared_ptr<Stage> stage; // Changed to std::unique_ptr
 	switch (randomStage) {
 	case 1:
-		stage = std::make_unique<BlueStage>(); // Use std::make_unique
+		stage = std::make_shared<BlueStage>(); // Use std::make_unique
 		lastStage = 1;
 		break;
 	case 2:
-		stage = std::make_unique<RedStage>(); // Use std::make_unique
+		stage = std::make_shared<RedStage>(m_groundLevel); // Use std::make_unique
 		lastStage = 2;
 		break;
 	default:
@@ -47,6 +67,7 @@ void StageManager::LoadStage()
 	if (stage != nullptr) {
 		m_stages.push_back(std::move(stage)); // Use std::move to transfer ownership
 	}
+	m_stages.back()->LoadToBack(); // Does this even work?
 }
 
 
@@ -70,15 +91,13 @@ void StageManager::InitialStageSetup()
 {
 	int xOffSet = 0;
 
-	LoadStage();
-	LoadStage();
-	LoadStage();
+	LoadStage(m_groundLevel);
+	LoadStage(m_groundLevel);
+	LoadStage(m_groundLevel);
 
 	for (auto& stage : m_stages)
 	{
 		stage->GetSprite().setPosition(960 + xOffSet, 540);
 		xOffSet = xOffSet + 1920;
-		std::cout << xOffSet << std::endl;
-		std::cout << stage->GetSprite().getPosition().x << std::endl;
 	}
 }
