@@ -7,7 +7,7 @@
 StageManager::StageManager(const int& groundLevel)
 	: lastStage(0), m_groundLevel(groundLevel)
 {
-	InitialStageSetup();
+
 }
 
 
@@ -18,31 +18,43 @@ void StageManager::Draw(sf::RenderWindow& window)
 	}
 }
 
-void StageManager::Update(Player& player)
+void StageManager::Update(Player& player) 
 {
+	// Scroll existing stages
+	//std::cout << "It is iteration : " << iteration << std::endl;
+
 	if (!m_stages.empty())
 	{
 		m_currentStage = m_stages[0];
-		std::cout << "Current stage: " << m_currentStage->GetStageType() << std::endl;	
+		//std::cout << "Current stage: " << m_currentStage->GetStageType() << std::endl;
 	}
 
-
-	if (!m_stages.empty() && m_stages.front()->GetIsOffScreen()) {
-		// Remove the first stage
-		m_stages.erase(m_stages.begin());
-		std::cout << "stage erased" << std::endl;
-		// Load a new stage at the end
-		LoadStage(m_groundLevel);
-
-		// Adjust the position of the new stage
-		auto& newStage = m_stages.back();
-		newStage->GetSprite().setPosition(960 + (m_stages.size() - 1) * 1920, 540);
-	}
 	for (auto& stage : m_stages)
 	{
-		stage->IsOffScreen();
 		stage->Update(player);
+		stage->IsOffScreen();
 	}
+
+	// Remove off-screen stages
+	m_stages.erase(std::remove_if(m_stages.begin(), m_stages.end(), [](const std::shared_ptr<Stage>& stage)
+		{
+			return stage->GetIsOffScreen();
+		}), m_stages.end());
+
+	if (m_stages.size() < 3)
+	{
+		LoadStage(m_groundLevel);
+	}
+
+	//for (auto& stage : m_stages)
+	//{
+	//	std::cout << "Stage Type : " << stage->GetStageType() << std::endl;
+	//	std::cout << "Stage position: " << stage->GetSprite().getPosition().x << std::endl;
+	//	std::cout << "Stage is off screen: " << stage->GetIsOffScreen() << std::endl;
+	//}
+
+	//std::cout << "There are " << m_stages.size() << " stages in the vector" << std::endl;
+	iteration++;
 }
 
 void StageManager::LoadStage(int& groundLevel)
@@ -50,14 +62,14 @@ void StageManager::LoadStage(int& groundLevel)
 	int randomStage = GenerateRandomStage(totalNumberOfStages, lastStage);
 
 
-	std::shared_ptr<Stage> stage; // Changed to std::unique_ptr
+	std::shared_ptr<Stage> stage;
 	switch (randomStage) {
 	case 1:
-		stage = std::make_shared<BlueStage>(); // Use std::make_unique
+		stage = std::make_shared<BlueStage>();
 		lastStage = 1;
 		break;
 	case 2:
-		stage = std::make_shared<RedStage>(m_groundLevel); // Use std::make_unique
+		stage = std::make_shared<RedStage>(m_groundLevel);
 		lastStage = 2;
 		break;
 	default:
@@ -65,9 +77,10 @@ void StageManager::LoadStage(int& groundLevel)
 		break;
 	}
 	if (stage != nullptr) {
-		m_stages.push_back(std::move(stage)); // Use std::move to transfer ownership
+		m_stages.push_back(stage); // Use std::move to transfer ownership
 	}
 	m_stages.back()->LoadToBack(); // Does this even work?
+	std::cout << "Stage loaded. New stage position : " << m_stages.back()->GetSprite().getPosition().x << std::endl;
 }
 
 
@@ -87,7 +100,7 @@ int StageManager::GenerateRandomStage(int totalNumberOfStages, int lastStage)
 	return randomStage;
 }
 
-void StageManager::InitialStageSetup()
+std::shared_ptr<Stage>& StageManager::InitialStageSetup()
 {
 	int xOffSet = 0;
 
@@ -97,7 +110,18 @@ void StageManager::InitialStageSetup()
 
 	for (auto& stage : m_stages)
 	{
-		stage->GetSprite().setPosition(960 + xOffSet, 540);
+		stage->GetSprite().setPosition(xOffSet, 0);
 		xOffSet = xOffSet + 1920;
 	}
+
+	//std::cout << "Initial stage setup done, there are " << m_stages.size() << "stages in the vector" << std::endl;
+
+	//for (auto& stage : m_stages)
+	//{
+		//std::cout << "Stage type: " << stage->GetStageType() << std::endl;
+		//std::cout << "Stage position: " << stage->GetSprite().getPosition().x << std::endl;
+	//}
+	
+	return m_stages[0];
+
 }

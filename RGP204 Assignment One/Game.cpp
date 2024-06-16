@@ -2,15 +2,22 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-Game::Game() : window(sf::VideoMode(1920, 1080), "One Button Game"), gameTextures(), player(gameTextures.playerTex, groundLevel),groundLevel(800), stageManager(groundLevel), gravity(0, 9.8)
+using namespace std;
+
+Game::Game() : window(sf::VideoMode(1920, 1080), "One Button Game"), gameTextures(), player(gameTextures.playerTex, groundLevel),groundLevel(800), stageManager(groundLevel), gravity(0,1)
 {
 	window.setFramerateLimit(60);
 }
 
 void Game::Run()
 {
+	stageManager.InitialStageSetup();
+	sf::Clock frameClock;
+
 	while (window.isOpen())
-	{
+	{	
+		float m_frame_Time = frameClock.restart().asSeconds();
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -26,11 +33,13 @@ void Game::Run()
 				}
 			}
 		}
+		player.UpdatePlayerVelocity(player.GetPlayerAcceleration());	
+		player.UpdatePlayerPosition(m_frame_Time);
 
 		if (!player.isGrounded(groundLevel))
 		{
 			player.UpdatePlayerAcceleration(gravity);
-			player.UpdatePlayerPosition();
+			player.UpdatePlayerPosition(m_frame_Time);
 		}
 		else
 		{
@@ -38,7 +47,6 @@ void Game::Run()
 			player.ResetPlayerVelocity();
 		}
 
-		
 
 		stageManager.Update(player);
 

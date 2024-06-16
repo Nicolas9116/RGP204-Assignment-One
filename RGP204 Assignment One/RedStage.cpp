@@ -13,17 +13,28 @@ RedStage::RedStage(const int& groundLevel) : m_groundLevel(groundLevel)
 //void LoadAssets() override;
 void RedStage::Update(Player& player)
 {
-	for (auto& sprite : backgroundSprites)
+	/*for (auto& sprite : backgroundSprites)
 	{
 		sprite.move(stageScrollSpeed, 0);
-	}
+	}*/
+
+	auto newEnd = std::remove_if(enemySprites.begin(), enemySprites.end(),
+		[this](const sf::Sprite& enemy) {
+			bool isOutOfBounds = enemy.getPosition().x < backgroundSprite.getPosition().x;
+			if (isOutOfBounds) {
+				std::cout << "Enemy Out of Bounds" << std::endl;
+			}
+			return isOutOfBounds; // Remove the sprite if it intersects with the sword hitbox
+		});
+
+	backgroundSprite.move(stageScrollSpeed, 0);
 
 	for (auto& sprite : enemySprites)
 	{
 		sprite.move(stageScrollSpeed * 2, 0);
 	}
 
-	stageItemSprite.move(stageScrollSpeed, 0);
+	stageItemSprite.setPosition(backgroundSprite.getPosition().x + 100, m_groundLevel - stageItemSprite.getGlobalBounds().height);
 
 	CheckForItemPickup(player);
 	if (itemPickedUp)
@@ -39,15 +50,18 @@ void RedStage::Update(Player& player)
 
 void RedStage::Draw(sf::RenderWindow& window)
 {
-	for (auto& sprite : backgroundSprites)
-	{
-		window.draw(sprite);
-	}
+	//for (auto& sprite : backgroundSprites)
+	//{
+	//	window.draw(sprite);
+	//}
+
+	window.draw(backgroundSprite);
 
 	for (auto& sprite : enemySprites)
 	{
 		window.draw(sprite);
 	}
+
 
 	if (!itemPickedUp)
 	{
@@ -68,14 +82,11 @@ void RedStage::SetupSprites()
 {
 	backgroundSprite.setTexture(backgroundTexture);
 	backgroundSprite.setScale(1, 1);
-	backgroundSprite.setOrigin(backgroundSprite.getGlobalBounds().width / 2, backgroundSprite.getGlobalBounds().height / 2);
-	backgroundSprite.setPosition(960, 540);
-	backgroundSprites.push_back(backgroundSprite);
+	//backgroundSprites.push_back(backgroundSprite);
 
 	stageItemSprite.setTexture(stageItemTexture);
 	stageItemSprite.setScale(1, 1);
 	//stageItemSprite.setOrigin(stageItemSprite.getGlobalBounds().width / 2, stageItemSprite.getGlobalBounds().height / 2);
-	stageItemSprite.setPosition(500, m_groundLevel - stageItemSprite.getGlobalBounds().height);
 }
 
 void RedStage::SetupFakeFloor(const int m_groundLevel)
@@ -97,29 +108,30 @@ void RedStage::CheckForItemPickup(Player& player)
 void RedStage::SpawnEnemy()
 {
 	enemySprite.setTexture(enemyTexture);
-	enemySprite.setScale(1, 1);
-	enemySprite.setPosition((backgroundSprites[0].getGlobalBounds().left + backgroundSprites[0].getGlobalBounds().width), m_groundLevel - enemySprite.getGlobalBounds().height);
-	std::cout << enemySprite.getPosition().x << std::endl;
+	enemySprite.setScale(2, 2);
+	enemySprite.setPosition((backgroundSprite.getGlobalBounds().left + backgroundSprite.getGlobalBounds().width), m_groundLevel - enemySprite.getGlobalBounds().height);
 	enemySprites.push_back(enemySprite);
 }
 
 void RedStage::IsOffScreen()
 {
-	if (backgroundSprites.back().getGlobalBounds().left + backgroundSprites.back().getGlobalBounds().width < 0)
+	if (backgroundSprite.getPosition().x <= -1920)
 	{
 		isOffScreen = true;
+		std::cout << "RED STAGE HAS GONE OFF SCREEN" << std::endl;
 	}
 
 }
 
 void RedStage::LoadToBack()
 {
-	int xOffset = 0;
-	for (auto& sprite : backgroundSprites)
-	{
-		sprite.setPosition(1920, 540);
-		xOffset += 1920;
-	}
+	backgroundSprite.setPosition(3840, 0);
+	//int xOffset = 0;
+	//for (auto& sprite : backgroundSprites)
+	//{
+	//	sprite.setPosition(1920, 540);
+	//	xOffset += 1920;
+	//}
 }
 
 std::string RedStage::GetStageType()

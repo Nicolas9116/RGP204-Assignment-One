@@ -13,10 +13,11 @@ public:
 	void Update(Player& player);
 	void Draw(sf::RenderWindow& window);
 	int GenerateRandomStage(int totalNumberOfStages, int lastStage);
-	void InitialStageSetup();
+	std::shared_ptr<Stage>& InitialStageSetup();
 	void LoadStage(int& groundLevel);
 	std::shared_ptr<Stage> GetCurrentStage() { return m_currentStage; }
 private:
+	int iteration = 0;
 	int lastStage;
 	int totalNumberOfStages = 2;
 	std::shared_ptr<Stage> m_currentStage;

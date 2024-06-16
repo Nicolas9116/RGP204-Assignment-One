@@ -37,7 +37,7 @@ public:
 	void SetupFakeFloor(const int m_groundLevel);
 	void CheckForItemPickup(Player& player);
 	void IsOffScreen() override;
-	virtual bool GetIsOffScreen() override;
+	bool GetIsOffScreen() override { return isOffScreen; }
 	virtual std::vector<sf::Sprite>& GetEnemySprites() override;
 	virtual void LoadToBack() override;
 	std::string GetStageType() override;
@@ -45,7 +45,9 @@ private:
 	sf::Texture backgroundTexture;
 	sf::Sprite backgroundSprite;
 	std::vector<sf::Sprite> enemySprites;
-	std::string stageType = "Sword Stage";
+	std::string stageType = "Blue Stage";
+	bool isOffScreen = false;
+	int stageScrollSpeed = -4;
 };
 
 class RedStage : public Stage {
@@ -89,7 +91,7 @@ private:
 	int stageScrollSpeed = -4;
 
 	bool itemPickedUp = false;
-	bool isOffScreen;
+	bool isOffScreen = false;
 
 	std::string stageType = "Sword Stage";
 };

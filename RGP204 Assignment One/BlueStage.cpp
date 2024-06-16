@@ -6,14 +6,12 @@
 		backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Blue.png");
 		backgroundSprite.setTexture(backgroundTexture);
 		backgroundSprite.setScale(1, 1);
-		backgroundSprite.setOrigin(backgroundSprite.getGlobalBounds().width / 2, backgroundSprite.getGlobalBounds().height / 2);
-		backgroundSprite.setPosition(960, 540);
 	}
 
 	//void LoadAssets() override;
 	void BlueStage::Update(Player& player)
 	{
-		backgroundSprite.move(-4, 0);
+		backgroundSprite.move(stageScrollSpeed, 0);
 	}
 	void BlueStage::Draw(sf::RenderWindow& window)
 	{
@@ -40,11 +38,11 @@
 
 	void BlueStage::IsOffScreen()
 	{
-	}
-
-	bool BlueStage::GetIsOffScreen()
-	{
-		return false;
+		if (backgroundSprite.getPosition().x < -1920)
+		{
+			isOffScreen = true;
+			std::cout << "BLUE STAGE HAS GONE OFF SCREEN" << std::endl;
+		}
 	}
 
 	std::vector<sf::Sprite>& BlueStage::GetEnemySprites()
@@ -54,7 +52,7 @@
 
 	void BlueStage::LoadToBack()
 	{
-		backgroundSprite.setPosition(1920 + 980, 540);
+		backgroundSprite.setPosition(3840, 0);
 	}
 
 	std::string BlueStage::GetStageType()

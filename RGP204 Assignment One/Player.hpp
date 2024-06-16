@@ -9,6 +9,7 @@ enum class equippedItem
 	sword,
 	shield,
 	bow,
+	boots,
 	arrow
 };
 
@@ -18,10 +19,9 @@ public:
 	Player(sf::Texture& playerTex, const int& groundLevel);
 	const sf::Sprite& GetPlayerSprite() const { return playerSprite; }
 	void DoOneButtonAction(std::shared_ptr<Stage> currentStage);
-	void SetEquippedItem(equippedItem item) { equipped = item; }
 	void Draw(sf::RenderWindow& window);
 	bool isGrounded(int groundLevel);
-	void UpdatePlayerPosition();
+	void UpdatePlayerPosition(float m_frame_Time);
 	void UpdatePlayerAcceleration(sf::Vector2f accelerationToAdd);
 	void UpdatePlayerVelocity(sf::Vector2f velocityToAdd);
 
@@ -30,6 +30,8 @@ public:
 
 	void EquipItem(equippedItem item) { equipped = item; }
 	void CheckSwordCollision(std::vector<sf::Sprite>& enemysprites);
+
+	sf::Vector2f GetPlayerAcceleration() { return playerAcceleration; }	
 
 private:
 	sf::Clock coolDownTimer;
