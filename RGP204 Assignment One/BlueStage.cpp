@@ -3,7 +3,8 @@
 
 	BlueStage::BlueStage()
 	{
-		backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Blue.png");
+		backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Sword_Stage_Background.png");
+		//BLUE TEX LOADER backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Blue.png");
 		backgroundSprite.setTexture(backgroundTexture);
 		backgroundSprite.setScale(1, 1);
 	}

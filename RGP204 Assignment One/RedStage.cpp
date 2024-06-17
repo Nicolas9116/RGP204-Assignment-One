@@ -7,7 +7,7 @@ RedStage::RedStage(const int& groundLevel) : m_groundLevel(groundLevel)
 {
 	LoadTextures();
 	SetupSprites();
-	SetupFakeFloor(m_groundLevel);
+	//SetupFakeFloor(m_groundLevel);
 }
 
 //void LoadAssets() override;
@@ -62,7 +62,6 @@ void RedStage::Draw(sf::RenderWindow& window)
 		window.draw(sprite);
 	}
 
-
 	if (!itemPickedUp)
 	{
 		window.draw(stageItemSprite);
@@ -73,7 +72,7 @@ void RedStage::Draw(sf::RenderWindow& window)
 
 void RedStage::LoadTextures()
 {
-	backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Red.png");
+	backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Sword_Stage_Background.png");
 	stageItemTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Items_On_Ground/Sword.png");
 	enemyTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Enemies/Enemy.png");
 }

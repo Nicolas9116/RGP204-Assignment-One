@@ -3,7 +3,7 @@
 #include "GameTextures.hpp"
 #include "Player.hpp"
 #include "StageManager.hpp"
-
+#include "Animation.hpp"
 
 class Game
 {
@@ -22,5 +22,6 @@ private:
 	Player player;
 	sf::Vector2f gravity;
 	StageManager stageManager;
+	Animation playerAnimation;
 };
 

@@ -2,19 +2,23 @@
 #include <iostream>
 #include "StageManager.hpp"
 
-Player::Player(sf::Texture& playerTex, const int& groundLevel)  : playerSprite(playerTex), equipped(equippedItem::none), m_groundLevel(groundLevel)
-{	
-	playerSprite.setScale(.1, .1);
-	playerSprite.setPosition(100, (m_groundLevel - playerSprite.getGlobalBounds().height));
+Player::Player(sf::Texture& playerTex, const int& groundLevel) : playerSprite(playerTex), equipped(equippedItem::none), m_groundLevel(groundLevel)
+{
+	playerSprite.setTextureRect(sf::IntRect(0, 0, 192, 192));//establish the default rect to avoid the full texture being used in the first frame
+	playerSprite.setScale(.5, .8);
+	playerSprite.setPosition(100, (m_groundLevel));
+	std::cout << m_groundLevel << std::endl;
+	std::cout << playerSprite.getGlobalBounds().height << std::endl;
+	std::cout << "player position: " << playerSprite.getPosition().x << " " << playerSprite.getPosition().y << std::endl;
 
 	swordHitBox.setFillColor(sf::Color::Black);
-	swordHitBox.setSize(sf::Vector2f(50, 50));
-	swordHitBox.setPosition(playerSprite.getPosition().x + playerSprite.getGlobalBounds().width, playerSprite.getPosition().y + playerSprite.getGlobalBounds().height / 2);
+	swordHitBox.setSize(sf::Vector2f(50, 75));
+	swordHitBox.setPosition(playerSprite.getPosition().x + playerSprite.getGlobalBounds().width, playerSprite.getPosition().y - playerSprite.getGlobalBounds().height / 2);
 }
 
 void Player::DoOneButtonAction(std::shared_ptr<Stage> currentStage)
 {
-	if(equipped == equippedItem::sword && currentStage->GetStageType() == "Sword Stage")
+	if (equipped == equippedItem::sword && currentStage->GetStageType() == "Sword Stage")
 	{
 		if (coolDownTimer.getElapsedTime().asSeconds() > .5)
 		{
@@ -27,38 +31,39 @@ void Player::DoOneButtonAction(std::shared_ptr<Stage> currentStage)
 		//play sword swinging animation
 		//check for enemy collision with sword hitbox
 	}
-	if(equipped == equippedItem::shield)
+	if (equipped == equippedItem::shield)
 	{
 		std::cout << "Player raises shield" << std::endl;
 	}
-	if(equipped == equippedItem::bow)
+	if (equipped == equippedItem::bow)
 	{
 		std::cout << "Player draws bow" << std::endl;
 	}
-	if(equipped == equippedItem::arrow)
+	if (equipped == equippedItem::arrow)
 	{
 		std::cout << "Player nocks arrow" << std::endl;
 	}
-	if(currentStage->GetStageType() == "Blue Stage" && m_isGrounded)
+	if (currentStage->GetStageType() == "Blue Stage" && m_isGrounded)
 	{
 		UpdatePlayerAcceleration(sf::Vector2f(0, -10));
 		std::cout << "Player puts on boots" << std::endl;
 	}
-	if(equipped == equippedItem::none)
+	if (equipped == equippedItem::none)
 	{
 		std::cout << "Player has no item equipped" << std::endl;
 	}
 }
 
-void Player::Draw(sf::RenderWindow& window)
+void Player::Draw(sf::RenderWindow& window, sf::IntRect uvrect)
 {
+	playerSprite.setTextureRect(uvrect);
 	window.draw(playerSprite);
 	//window.draw(swordHitBox);
 }
 
 bool Player::isGrounded(int groundlevel)
 {
-	if(GetPlayerSprite().getPosition().y >= groundlevel - playerSprite.getGlobalBounds().height)
+	if (GetPlayerSprite().getPosition().y >= groundlevel - playerSprite.getGlobalBounds().height)
 	{
 		m_isGrounded = true;
 		playerSprite.setPosition(playerSprite.getPosition().x, groundlevel - playerSprite.getGlobalBounds().height);

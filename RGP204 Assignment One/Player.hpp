@@ -19,7 +19,7 @@ public:
 	Player(sf::Texture& playerTex, const int& groundLevel);
 	const sf::Sprite& GetPlayerSprite() const { return playerSprite; }
 	void DoOneButtonAction(std::shared_ptr<Stage> currentStage);
-	void Draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow& window, sf::IntRect uvrect);
 	bool isGrounded(int groundLevel);
 	void UpdatePlayerPosition(float m_frame_Time);
 	void UpdatePlayerAcceleration(sf::Vector2f accelerationToAdd);
