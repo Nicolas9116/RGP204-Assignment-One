@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-Game::Game() : window(sf::VideoMode(1920, 1080), "One Button Game"), gameTextures(), player(gameTextures.playerSpriteMap, groundLevel),groundLevel(900), stageManager(groundLevel), gravity(0,1), playerAnimation(&gameTextures.playerSpriteMap,sf::Vector2u (6,3),0.08f)
+Game::Game() : window(sf::VideoMode(1920, 1080), "One Button Game"), gameTextures(), player(gameTextures.playerSpriteMap,gameTextures.playerAttackTex,gameTextures.playerJumpTex, groundLevel),groundLevel(900), stageManager(groundLevel), gravity(0,1)
 {
 	window.setFramerateLimit(60);
 }
@@ -46,13 +46,13 @@ void Game::Run()
 			player.ResetPlayerVelocity();
 		}
 
-		playerAnimation.Update(0, m_frame_Time);
-		stageManager.Update(player);
-
 		window.clear();
-		
-		stageManager.Draw(window);
-		player.Draw(window, playerAnimation.GetUVRect());
+
+		stageManager.Update(player);
+		stageManager.Draw(window, m_frame_Time);
+
+		player.Draw(window, m_frame_Time);
+
 
 		window.display();
 	}

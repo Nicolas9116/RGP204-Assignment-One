@@ -2,90 +2,61 @@
 #include <iostream>
 #include "Player.hpp"
 #include <SFML/Graphics.hpp>
+#include "Orc.hpp"
+#include "Item.hpp"
 
-RedStage::RedStage(const int& groundLevel) : m_groundLevel(groundLevel)
-{
-	LoadTextures();
-	SetupSprites();
-	//SetupFakeFloor(m_groundLevel);
+
+RedStage::RedStage(const int& groundLevel) : 
+	m_groundLevel(groundLevel), 
+	numberOfEnemies(3), 
+	enemies(new std::vector<Orc>),
+	sword(stageItemTexture),
+	itemPickedUp(false)
+{	//SetupFakeFloor(m_groundLevel);
 }
-
 //void LoadAssets() override;
 void RedStage::Update(Player& player)
 {
-	/*for (auto& sprite : backgroundSprites)
-	{
-		sprite.move(stageScrollSpeed, 0);
-	}*/
-
-	auto newEnd = std::remove_if(enemySprites.begin(), enemySprites.end(),
-		[this](const sf::Sprite& enemy) {
-			bool isOutOfBounds = enemy.getPosition().x < backgroundSprite.getPosition().x;
-			if (isOutOfBounds) {
-				std::cout << "Enemy Out of Bounds" << std::endl;
-			}
-			return isOutOfBounds; // Remove the sprite if it intersects with the sword hitbox
-		});
-
 	backgroundSprite.move(stageScrollSpeed, 0);
 
-	for (auto& sprite : enemySprites)
+	for (auto& enemy : *enemies)
 	{
-		sprite.move(stageScrollSpeed * 2, 0);
+		enemy.Update(stageScrollSpeed, player);
 	}
 
-	stageItemSprite.setPosition(backgroundSprite.getPosition().x + 100, m_groundLevel - stageItemSprite.getGlobalBounds().height);
-
+	sword.Update(stageScrollSpeed);
 	CheckForItemPickup(player);
-	if (itemPickedUp)
-	{
-	}
-
-	if (spawnClock.getElapsedTime().asSeconds() > 2)
-	{
-		SpawnEnemy();
-		spawnClock.restart();
-	}
 }
 
-void RedStage::Draw(sf::RenderWindow& window)
+void RedStage::Draw(sf::RenderWindow& window, float frame_Time)
 {
-	//for (auto& sprite : backgroundSprites)
-	//{
-	//	window.draw(sprite);
-	//}
-
 	window.draw(backgroundSprite);
 
-	for (auto& sprite : enemySprites)
+	for (auto& Orc : *enemies)
 	{
-		window.draw(sprite);
+		Orc.Draw(window, frame_Time);
 	}
-
+	
 	if (!itemPickedUp)
 	{
-		window.draw(stageItemSprite);
+		sword.Draw(window, frame_Time);
 	}
 
-	window.draw(fakeFloor);
+
 }
 
 void RedStage::LoadTextures()
 {
 	backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Sword_Stage_Background.png");
-	stageItemTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Items_On_Ground/Sword.png");
-	enemyTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Enemies/Enemy.png");
+	stageItemTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Items_On_Ground/Sword Item.png");
+	orcTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Enemies/Orc Idle.png");
+	orcDeathTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Enemies/Orc Death.png");
 }
 
 void RedStage::SetupSprites()
 {
 	backgroundSprite.setTexture(backgroundTexture);
 	backgroundSprite.setScale(1, 1);
-	//backgroundSprites.push_back(backgroundSprite);
-
-	stageItemSprite.setTexture(stageItemTexture);
-	stageItemSprite.setScale(1, 1);
-	//stageItemSprite.setOrigin(stageItemSprite.getGlobalBounds().width / 2, stageItemSprite.getGlobalBounds().height / 2);
 }
 
 void RedStage::SetupFakeFloor(const int m_groundLevel)
@@ -97,19 +68,23 @@ void RedStage::SetupFakeFloor(const int m_groundLevel)
 
 void RedStage::CheckForItemPickup(Player& player)
 {
-	if (!itemPickedUp && stageItemSprite.getGlobalBounds().intersects(player.GetPlayerSprite().getGlobalBounds()))
+	if (!itemPickedUp && sword.GetSwordSprite().getGlobalBounds().intersects(player.GetPlayerSprite().getGlobalBounds()))
 	{
 		player.EquipItem(equippedItem::sword);
-		itemPickedUp = true;
+		this->itemPickedUp = true;
 	}
 }
 
 void RedStage::SpawnEnemy()
 {
-	enemySprite.setTexture(enemyTexture);
-	enemySprite.setScale(2, 2);
-	enemySprite.setPosition((backgroundSprite.getGlobalBounds().left + backgroundSprite.getGlobalBounds().width), m_groundLevel - enemySprite.getGlobalBounds().height);
-	enemySprites.push_back(enemySprite);
+	int spawnLocationX = backgroundSprite.getGlobalBounds().left + backgroundSprite.getGlobalBounds().width;
+	int spawnLocationY = m_groundLevel - orcTexture.getSize().y;
+
+	for (int i = 0; i < numberOfEnemies; i++)
+	{
+		spawnLocationX -= 250;
+		enemies->emplace_back(&orcTexture, &orcDeathTexture, spawnLocationX, spawnLocationY);
+	}
 }
 
 void RedStage::IsOffScreen()
@@ -136,4 +111,19 @@ void RedStage::LoadToBack()
 std::string RedStage::GetStageType()
 {
 	return stageType;
+}
+
+void RedStage::SpawnItem()
+{
+	sword = Sword(stageItemTexture);
+	sword.GetSwordSprite().setTexture(stageItemTexture);
+	sword.GetSwordSprite().setPosition(backgroundSprite.getPosition().x + 250, m_groundLevel - sword.GetSwordSprite().getGlobalBounds().height);
+}
+
+void RedStage::DelayedSetupCall()
+{
+	LoadTextures();
+	SetupSprites();
+	SpawnEnemy();
+	SpawnItem();
 }

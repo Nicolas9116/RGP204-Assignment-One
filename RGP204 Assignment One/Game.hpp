@@ -22,6 +22,6 @@ private:
 	Player player;
 	sf::Vector2f gravity;
 	StageManager stageManager;
-	Animation playerAnimation;
+	//Animation playerAnimation;
 };
 

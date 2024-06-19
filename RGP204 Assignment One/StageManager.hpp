@@ -2,8 +2,10 @@
 #include <vector>
 #include <memory>
 #include "Stage.hpp"
+#include <iostream>
 
 class Player;
+class Gametextures;
 
 class StageManager
 {
@@ -11,11 +13,11 @@ public:
 	StageManager(const int& groundLevel);
 
 	void Update(Player& player);
-	void Draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow& window, float frame_Time);
 	int GenerateRandomStage(int totalNumberOfStages, int lastStage);
 	std::shared_ptr<Stage>& InitialStageSetup();
 	void LoadStage(int& groundLevel);
-	std::shared_ptr<Stage> GetCurrentStage() { return m_currentStage; }
+	std::shared_ptr<Stage>& GetCurrentStage() { return m_currentStage; std::cout << this << std::endl; }
 private:
 	int iteration = 0;
 	int lastStage;

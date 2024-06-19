@@ -11,10 +11,10 @@ StageManager::StageManager(const int& groundLevel)
 }
 
 
-void StageManager::Draw(sf::RenderWindow& window)
+void StageManager::Draw(sf::RenderWindow& window, float frame_Time)
 {
 	for (auto& stage : m_stages) {
-		stage->Draw(window);
+		stage->Draw(window, frame_Time);
 	}
 }
 
@@ -65,7 +65,7 @@ void StageManager::LoadStage(int& groundLevel)
 	std::shared_ptr<Stage> stage;
 	switch (randomStage) {
 	case 1:
-		stage = std::make_shared<BlueStage>();
+		stage = std::make_shared<BlueStage>(m_groundLevel);
 		lastStage = 1;
 		break;
 	case 2:
@@ -79,7 +79,8 @@ void StageManager::LoadStage(int& groundLevel)
 	if (stage != nullptr) {
 		m_stages.push_back(stage); // Use std::move to transfer ownership
 	}
-	m_stages.back()->LoadToBack(); // Does this even work?
+	m_stages.back()->LoadToBack();
+	m_stages.back()->DelayedSetupCall();
 	std::cout << "Stage loaded. New stage position : " << m_stages.back()->GetSprite().getPosition().x << std::endl;
 }
 
@@ -114,6 +115,11 @@ std::shared_ptr<Stage>& StageManager::InitialStageSetup()
 		xOffSet = xOffSet + 1920;
 	}
 
+	for (auto& stage : m_stages)
+	{
+		stage->DelayedSetupCall();
+
+	}
 	//std::cout << "Initial stage setup done, there are " << m_stages.size() << "stages in the vector" << std::endl;
 
 	//for (auto& stage : m_stages)
