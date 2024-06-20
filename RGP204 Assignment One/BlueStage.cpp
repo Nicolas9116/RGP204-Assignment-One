@@ -29,7 +29,7 @@
 	void BlueStage::LoadTextures()
 	{		
 		bootsTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Items_On_Ground/Boots Item.png");
-		backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Blue.png");
+		backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Boots_Stage_Background.png");
 	}
 
 	void BlueStage::SetupSprites()

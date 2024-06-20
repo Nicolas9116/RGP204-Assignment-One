@@ -44,3 +44,9 @@ void Animation::Update(int row, float deltaTime)
 	uvRect.left = currentFrame.x * uvRect.width;//set the left of the uvRect to the left of the current frame
 	uvRect.top = currentFrame.y * uvRect.height;//set the top of the uvRect to the top of the current frame
 }
+
+void Animation::Recalculate()
+{
+	uvRect.width = texture->getSize().x / float(animationLength.x);//width of each frame
+	uvRect.height = texture->getSize().y / float(animationLength.y);//height of each frame
+}

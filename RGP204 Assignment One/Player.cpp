@@ -6,7 +6,7 @@
 Player::Player(sf::Texture& playerTex, sf::Texture& playerAttackTex,sf::Texture& playerJumpTex, const int& groundLevel) : playerSprite(playerTex), equipped(equippedItem::none), m_groundLevel(groundLevel), playerAnimation(&playerTex, sf::Vector2u(6, 9), 0.08f), animationRow(0), playerAnimationAttack(&playerAttackTex, sf::Vector2u(4, 1), .08f), playerJumpAnimation(&playerJumpTex, sf::Vector2u(6, 1), .08f)
 {	
 	playerSprite.setTextureRect(sf::IntRect(0, 0, 192, 192));//establish the default rect to avoid the full texture being used in the first frame
-	playerSprite.setScale(.5, .8);
+	playerSprite.setScale(.8, .8);
 	playerSprite.setPosition(100, (m_groundLevel));
 
 	swordHitBox.setFillColor(sf::Color::Black);

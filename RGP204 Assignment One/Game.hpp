@@ -8,7 +8,7 @@
 class Game
 {
 public:
-	Game();
+	Game(sf::RenderWindow& window);
 	void Run();
 
 	const GameTextures& GetGameTextures() const;
@@ -17,7 +17,7 @@ public:
 
 private:
 	const int groundLevel;
-	sf::RenderWindow window;
+	sf::RenderWindow& window;
 	GameTextures gameTextures;
 	Player player;
 	sf::Vector2f gravity;

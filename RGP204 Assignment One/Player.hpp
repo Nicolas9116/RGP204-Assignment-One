@@ -33,6 +33,7 @@ public:
 	void CheckSwordCollision(std::vector<Orc>& Orcs);
 
 	void SetIsDead(bool isDead);
+	bool isDeadCheck() { return isDead; }
 
 	sf::Vector2f GetPlayerAcceleration() { return playerAcceleration; }	
 	Animation playerAnimation;

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-Game::Game() : window(sf::VideoMode(1920, 1080), "One Button Game"), gameTextures(), player(gameTextures.playerSpriteMap,gameTextures.playerAttackTex,gameTextures.playerJumpTex, groundLevel),groundLevel(900), stageManager(groundLevel), gravity(0,1)
+Game::Game(sf::RenderWindow& window) : window(window), gameTextures(), player(gameTextures.playerSpriteMap,gameTextures.playerAttackTex,gameTextures.playerJumpTex, groundLevel),groundLevel(900), stageManager(groundLevel), gravity(0,1)
 {
 	window.setFramerateLimit(60);
 }
@@ -11,8 +11,9 @@ void Game::Run()
 {
 	stageManager.InitialStageSetup();
 	sf::Clock frameClock;
+	window.setMouseCursorVisible(true);
 
-	while (window.isOpen())
+	while (!player.isDeadCheck())
 	{
 
 		float m_frame_Time = frameClock.restart().asSeconds();
