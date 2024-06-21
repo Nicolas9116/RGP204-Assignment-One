@@ -6,6 +6,15 @@
 		boots(bootsTexture),
 		groundLevel(groundLevel)
 	{
+
+=======
+		backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Blue.png");
+		backgroundSprite.setTexture(backgroundTexture);
+		backgroundSprite.setScale(1, 1);
+		backgroundSprite.setOrigin(backgroundSprite.getGlobalBounds().width / 2, backgroundSprite.getGlobalBounds().height / 2);
+		backgroundSprite.sePosition(960, 540);
+		
+		SpawnPlatforms();
 	}
 
 	//void LoadAssets() override;
@@ -18,6 +27,7 @@
 	void BlueStage::Draw(sf::RenderWindow& window, float frame_Time)
 	{
 		window.draw(backgroundSprite);
+
 
 		if (!itemPickedUp)
 		{
@@ -84,3 +94,9 @@
 		SetupSprites();
 		SpawnItem();
 	}
+
+	}
+
+	void BlueStage::SpawnPlatforms();
+{ 	for(int i; i < numberOfPlatforms; i++)
+		{ positions.emplace(positions[i]); }
