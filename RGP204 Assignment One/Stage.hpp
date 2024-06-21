@@ -7,7 +7,7 @@
 #include "Item.hpp"
 
 class Player;
-
+class Ground;
 
 class Stage {
 public:
@@ -47,12 +47,13 @@ public:
 	virtual void LoadToBack() override;
 	std::string GetStageType() override;
 	std::vector<Orc>& GetEnemiesVector() override { return enemies; }
-	std::vector<Ground>& GetPlatforms() {return platforms};
+	std::vector<Ground>* GetPlatforms() { return platforms; }
+	void SpawnPlatforms();
 	void SpawnItem() override;
 	virtual void DelayedSetupCall() override;
 private:
-	std::vector<sf::vector2f> positions;
-	std::vector<Ground*> platforms;
+	std::vector<sf::Vector2f> positions;
+	std::vector<Ground>* platforms;
 	std::vector<Orc> enemies;
 	sf::Texture backgroundTexture;
 	sf::Texture bootsTexture;
@@ -64,6 +65,7 @@ private:
 	bool isOffScreen = false;
 	int stageScrollSpeed = -4;
 	const int groundLevel;
+	int numberOfPlatforms;
 	Boots boots;
 };
 
