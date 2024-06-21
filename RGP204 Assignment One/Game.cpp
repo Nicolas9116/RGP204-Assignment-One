@@ -2,16 +2,22 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-Game::Game() : window(sf::VideoMode(1920, 1080), "One Button Game"), gameTextures(), player(gameTextures.playerTex), stageManager()
+Game::Game(sf::RenderWindow& window) : window(window), gameTextures(), player(gameTextures.playerSpriteMap,gameTextures.playerAttackTex,gameTextures.playerJumpTex, groundLevel),groundLevel(900), stageManager(groundLevel), gravity(0,1)
 {
 	window.setFramerateLimit(60);
-
 }
 
 void Game::Run()
 {
-	while (window.isOpen())
+	stageManager.InitialStageSetup();
+	sf::Clock frameClock;
+	window.setMouseCursorVisible(true);
+
+	while (!player.isDeadCheck())
 	{
+
+		float m_frame_Time = frameClock.restart().asSeconds();
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -23,18 +29,30 @@ void Game::Run()
 			{
 				if (event.key.code == sf::Keyboard::Space)
 				{
-					std::cout << "Space key pressed" << std::endl;
-					player.DoOneButtonAction();
+					player.DoOneButtonAction(stageManager.GetCurrentStage());
 				}
 			}
 		}
-		stageManager.Update();
+		player.UpdatePlayerVelocity(player.GetPlayerAcceleration());	
+		player.UpdatePlayerPosition(m_frame_Time);
+
+		if (!player.isGrounded(groundLevel))
+		{
+			player.UpdatePlayerAcceleration(gravity);
+			player.UpdatePlayerPosition(m_frame_Time);
+		}
+		else
+		{
+			player.ResetPlayerAcceleration();
+			player.ResetPlayerVelocity();
+		}
 
 		window.clear();
 
-		
-		stageManager.Draw(window);
-		window.draw(player.GetPlayerSprite());
+		stageManager.Update(player);
+		stageManager.Draw(window, m_frame_Time);
+
+		player.Draw(window, m_frame_Time);
 
 
 		window.display();

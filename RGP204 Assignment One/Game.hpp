@@ -3,21 +3,25 @@
 #include "GameTextures.hpp"
 #include "Player.hpp"
 #include "StageManager.hpp"
-
+#include "Animation.hpp"
 
 class Game
 {
 public:
-	Game();
+	Game(sf::RenderWindow& window);
 	void Run();
 
 	const GameTextures& GetGameTextures() const;
 	const Player& GetPlayer() const { return player; }
 	const sf::RenderWindow& GetWindow() const { return window; }
+
 private:
-	sf::RenderWindow window;
+	const int groundLevel;
+	sf::RenderWindow& window;
 	GameTextures gameTextures;
 	Player player;
+	sf::Vector2f gravity;
 	StageManager stageManager;
+	//Animation playerAnimation;
 };
 
