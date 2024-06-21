@@ -47,9 +47,12 @@ public:
 	virtual void LoadToBack() override;
 	std::string GetStageType() override;
 	std::vector<Orc>& GetEnemiesVector() override { return enemies; }
+	std::vector<Ground>& GetPlatforms() {return platforms};
 	void SpawnItem() override;
 	virtual void DelayedSetupCall() override;
 private:
+	std::vector<sf::vector2f> positions;
+	std::vector<Ground*> platforms;
 	std::vector<Orc> enemies;
 	sf::Texture backgroundTexture;
 	sf::Texture bootsTexture;
