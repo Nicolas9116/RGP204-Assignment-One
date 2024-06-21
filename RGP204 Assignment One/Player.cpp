@@ -166,3 +166,15 @@ void Player::SetIsDead(bool isDead)
 {
 	this->isDead = isDead;
 }
+
+void CheckForGround(std::shared_ptr<Stage>& currentStage)
+{
+	if (currentStage->GetStageType() == "Boots Stage")
+		{
+			auto platforms = currentStage->GetPlatforms();
+			for (int i; i< platforms.size(); i++
+				if ({playerSprite.GetGlobalBounds().intersects(platforms[i].getGlobalBounds()))
+				{	playerSprite.setPosition.y(platforms[i].getposition().y - playerSprite.GetGlobalBounds().height)	}
+	player.m_isGrounded = true; //Need to check if the x or the y length of the intersecting rectange are bigger to see if should fall or should be on top
+		}
+}
