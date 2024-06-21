@@ -7,6 +7,8 @@
 		backgroundSprite.setScale(1, 1);
 		backgroundSprite.setOrigin(backgroundSprite.getGlobalBounds().width / 2, backgroundSprite.getGlobalBounds().height / 2);
 		backgroundSprite.setPosition(960, 540);
+		
+		SpawnPlatforms();
 	}
 
 	//void LoadAssets() override;
@@ -19,3 +21,7 @@
 	{
 		window.draw(backgroundSprite);
 	}
+
+	void BlueStage::SpawnPlatforms();
+{ 	for(int i; i < numberOfPlatforms; i++)
+		{ positions.emplace(positions[i]); }
