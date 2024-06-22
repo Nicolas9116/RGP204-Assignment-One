@@ -2,20 +2,20 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-Game::Game(sf::RenderWindow& window) : window(window), gameTextures(), player(gameTextures.playerSpriteMap,gameTextures.playerAttackTex,gameTextures.playerJumpTex, groundLevel),groundLevel(900), stageManager(groundLevel), gravity(0,1)
+Game::Game(sf::RenderWindow& window) : window(window), gameTextures(), player(gameTextures.playerSpriteMap,gameTextures.playerAttackTex,gameTextures.playerJumpTex, groundLevel),groundLevel(900), stageManager(groundLevel), gravity(0,9.8f)
 {
-	window.setFramerateLimit(60);
 }
 
 void Game::Run()
 {
 	stageManager.InitialStageSetup();
+	window.setMouseCursorVisible(true);	
 	sf::Clock frameClock;
-	window.setMouseCursorVisible(true);
+	
+	while (!player.isDead)
+	{	
 
-	while (!player.isDeadCheck())
-	{
-
+		std::cout << "Player is dead?" << player.isDead <<std::endl;	
 		float m_frame_Time = frameClock.restart().asSeconds();
 
 		sf::Event event;
@@ -33,19 +33,10 @@ void Game::Run()
 				}
 			}
 		}
-		player.UpdatePlayerVelocity(player.GetPlayerAcceleration());	
-		player.UpdatePlayerPosition(m_frame_Time);
 
-		if (!player.isGrounded(groundLevel))
-		{
-			player.UpdatePlayerAcceleration(gravity);
-			player.UpdatePlayerPosition(m_frame_Time);
-		}
-		else
-		{
-			player.ResetPlayerAcceleration();
-			player.ResetPlayerVelocity();
-		}
+
+			player.Update(player, gravity, m_frame_Time, stageManager);
+		
 
 		window.clear();
 

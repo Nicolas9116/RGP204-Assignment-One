@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "Menu.hpp"
+#include <SFML/Graphics.hpp>
 
 enum class gameState
 {
@@ -11,8 +12,9 @@ enum class gameState
 int main() 
 {
 	gameState state = gameState::Menu;
-	sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(1920, 1080), "One Button Knight");
-		
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "One Button Knight");
+	window.setFramerateLimit(60);
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -45,8 +47,9 @@ int main()
 			Game game(window);
 			// Run the game
 			game.Run();
+
 			// Set the state back to the menu
-			state == gameState::Menu;
+			state = gameState::Menu;
 		}
 
 		window.display();

@@ -18,6 +18,8 @@ public:
 	std::shared_ptr<Stage>& InitialStageSetup();
 	void LoadStage(int& groundLevel);
 	std::shared_ptr<Stage>& GetCurrentStage() { return m_currentStage; std::cout << this << std::endl; }
+	std::vector<std::shared_ptr<Stage>>& GetAllStages() { return m_stages; }
+
 private:
 	int iteration = 0;
 	int lastStage;

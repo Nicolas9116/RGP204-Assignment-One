@@ -5,9 +5,10 @@
 #include "Animation.hpp"
 #include "Orc.hpp"
 #include "Item.hpp"
+#include "Ground.hpp"	
 
 class Player;
-class Ground;
+
 
 class Stage {
 public:
@@ -26,6 +27,8 @@ public:
 	virtual std::vector<Orc>& GetEnemiesVector() = 0;
 	virtual void SpawnItem() = 0;
 	virtual void DelayedSetupCall() = 0;
+	virtual std::vector<Ground>& GetGround() = 0;
+
 private:
 
 };
@@ -47,17 +50,18 @@ public:
 	virtual void LoadToBack() override;
 	std::string GetStageType() override;
 	std::vector<Orc>& GetEnemiesVector() override { return enemies; }
-	std::vector<Ground>* GetPlatforms() { return platforms; }
+	std::vector<Ground>& GetGround() override { return ground; }
 	void SpawnPlatforms();
+	void SpawnBaseGround();
 	void SpawnItem() override;
 	virtual void DelayedSetupCall() override;
 private:
 	std::vector<sf::Vector2f> positions;
-	std::vector<Ground>* platforms;
+	std::vector<Ground> ground;
 	std::vector<Orc> enemies;
 	sf::Texture backgroundTexture;
 	sf::Texture bootsTexture;
-
+	sf::Texture groundTexture;
 	sf::Sprite backgroundSprite;
 	std::vector<sf::Sprite> enemySprites;
 	std::string stageType = "Blue Stage";
@@ -89,9 +93,11 @@ public:
 	std::string GetStageType() override;
 	void SpawnItem() override;
 	virtual void DelayedSetupCall() override;
+	std::vector<Ground>& GetGround() override { return ground; }
+	void SpawnBaseGround();
 
 private:
-	
+	std::vector<Ground> ground;
 
 	sf::Clock spawnClock;
 
@@ -102,6 +108,7 @@ private:
 	sf::Texture orcTexture;
 	sf::Texture backgroundTexture;
 	sf::Texture stageItemTexture;
+	sf::Texture groundTexture;
 
 	sf::Sprite backgroundSprite;
 	sf::Sprite stageItemSprite;

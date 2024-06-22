@@ -6,15 +6,10 @@
 BlueStage::BlueStage(const int& groundLevel) :
 	boots(bootsTexture),
 	groundLevel(groundLevel),
-	numberOfPlatforms(3)
+	numberOfPlatforms(3),
+	ground(std::vector<Ground>())
 {
-	backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Blue.png");
-	backgroundSprite.setTexture(backgroundTexture);
-	backgroundSprite.setScale(1, 1);
-	backgroundSprite.setOrigin(backgroundSprite.getGlobalBounds().width / 2, backgroundSprite.getGlobalBounds().height / 2);
-	backgroundSprite.setPosition(960, 540);
 
-	SpawnPlatforms();
 }
 
 //void LoadAssets() override;
@@ -24,9 +19,9 @@ void BlueStage::Update(Player& player)
 	backgroundSprite.move(stageScrollSpeed, 0);
 	CheckForItemPickup(player);
 
-	for (auto& platform : *platforms)
+	for (auto& ground : ground)
 	{
-		platform.GroundUpdate(0);
+		ground.GroundUpdate(0);
 	}
 }
 void BlueStage::Draw(sf::RenderWindow& window, float frame_Time)
@@ -39,12 +34,17 @@ void BlueStage::Draw(sf::RenderWindow& window, float frame_Time)
 		boots.Draw(window, frame_Time);
 	}
 
+	for (int i = 0; i < 3; i++)
+	{
+		ground[i].Draw(window);
+	}
 }
 
 void BlueStage::LoadTextures()
 {
 	bootsTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Items_On_Ground/Boots Item.png");
 	backgroundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Boots_Stage_Background.png");
+	groundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Jumping Block.png");
 }
 
 void BlueStage::SetupSprites()
@@ -90,7 +90,7 @@ void BlueStage::SpawnItem()
 {
 	boots = Boots(bootsTexture);
 	boots.GetBootsSprite().setTexture(bootsTexture);
-	boots.GetBootsSprite().setPosition(this->backgroundSprite.getPosition().x + 250, groundLevel - boots.GetBootsSprite().getGlobalBounds().height);
+	boots.GetBootsSprite().setPosition(this->backgroundSprite.getPosition().x + 75, groundLevel - boots.GetBootsSprite().getGlobalBounds().height);
 }
 
 void BlueStage::DelayedSetupCall()
@@ -98,12 +98,60 @@ void BlueStage::DelayedSetupCall()
 	LoadTextures();
 	SetupSprites();
 	SpawnItem();
+	SpawnPlatforms();
+	SpawnBaseGround();
 }
+
+//void BlueStage::SpawnPlatforms()
+//{
+//	for (int i=0; i < numberOfPlatforms; i++)
+//	{
+//		platforms->emplace_back(positions[i], stageScrollSpeed);
+//	}
+//}
 
 void BlueStage::SpawnPlatforms()
 {
-	for (int i; i < numberOfPlatforms; i++)
+	// First, create and add platforms to the vector
+	for (int i = 0; i < numberOfPlatforms; i++)
 	{
-		positions.emplace_back(positions[i]);
+		ground.emplace_back(stageScrollSpeed, groundTexture);
 	}
+
+	// Variables to determine the spawn location of each platform
+	int spawnLocationX = this->backgroundSprite.getGlobalBounds().left + 450;
+	int spawnLocationY = 850;
+
+	// Now, set up each platform with its spawn location
+	for (int i = 0; i < numberOfPlatforms; i++)
+	{
+		// Calculate the spawn location for the current platform
+		sf::Vector2f spawnLocation = sf::Vector2f(spawnLocationX, spawnLocationY);
+
+		// Set up the current platform
+		ground[i].SetupPlatforms(spawnLocation);
+
+		spawnLocationX += 400; // Increase X to create a gap between platforms horizontally
+		spawnLocationY -= 50;  // Optional: Adjust Y if you want the platforms to have different heights
+	}
+}
+
+void BlueStage::SpawnBaseGround()
+{
+	int spawnLocationXLeft = this->backgroundSprite.getGlobalBounds().left;
+	int spawnLocationYLeft = 900;
+	int spawnLocationXRight = this->backgroundSprite.getGlobalBounds().left + this->backgroundSprite.getGlobalBounds().width - 250;
+	int spawnLocationYRight = 900;
+
+	Ground groundLeft(stageScrollSpeed, groundTexture);
+	Ground groundRight(stageScrollSpeed, groundTexture);	
+	groundLeft.SetupPlatforms(sf::Vector2f(spawnLocationXLeft, spawnLocationYLeft));
+	groundLeft.GetSprite().setScale(1.5, 1);
+	this->ground.push_back(groundLeft);
+	groundRight.SetupPlatforms(sf::Vector2f(spawnLocationXRight, spawnLocationYRight));
+	groundRight.GetSprite().setScale(1.5, 1);
+	this->ground.push_back(groundRight);
+
+	//std::cout << "Ground size: " << this->ground.size() << std::endl;
+	//std::cout << "Ground position: " << this->ground.back().GetSprite().getPosition().x << std::endl;
 }

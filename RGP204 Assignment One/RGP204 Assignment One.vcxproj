@@ -143,11 +143,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Downloads\Ground.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BlueStage.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameTextures.cpp" />
+    <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\vampi\source\SFML-2.6.1-windows-vc17-64-bit\SFML-2.6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -163,10 +163,10 @@
     <ClCompile Include="StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Downloads\Ground.hpp" />
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="GameTextures.hpp" />
+    <ClInclude Include="Ground.hpp" />
     <ClInclude Include="Item.hpp" />
     <ClInclude Include="Menu.hpp" />
     <ClInclude Include="Orc.hpp" />

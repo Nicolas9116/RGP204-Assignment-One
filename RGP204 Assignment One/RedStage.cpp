@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Orc.hpp"
 #include "Item.hpp"
+#include "Ground.hpp"
 
 
 RedStage::RedStage(const int& groundLevel) : 
@@ -12,7 +13,7 @@ RedStage::RedStage(const int& groundLevel) :
 	enemies(new std::vector<Orc>),
 	sword(stageItemTexture),
 	itemPickedUp(false)
-{	//SetupFakeFloor(m_groundLevel);
+{	
 }
 //void LoadAssets() override;
 void RedStage::Update(Player& player)
@@ -24,6 +25,11 @@ void RedStage::Update(Player& player)
 		enemy.Update(stageScrollSpeed, player);
 	}
 
+	for (auto& ground : ground)
+	{
+		ground.GroundUpdate(stageScrollSpeed);
+	}	
+
 	sword.Update(stageScrollSpeed);
 	CheckForItemPickup(player);
 }
@@ -31,6 +37,11 @@ void RedStage::Update(Player& player)
 void RedStage::Draw(sf::RenderWindow& window, float frame_Time)
 {
 	window.draw(backgroundSprite);
+
+/*	for (auto & ground : ground)
+	{
+		ground.Draw(window);
+	}*/	
 
 	for (auto& Orc : *enemies)
 	{
@@ -41,8 +52,6 @@ void RedStage::Draw(sf::RenderWindow& window, float frame_Time)
 	{
 		sword.Draw(window, frame_Time);
 	}
-
-
 }
 
 void RedStage::LoadTextures()
@@ -51,6 +60,7 @@ void RedStage::LoadTextures()
 	stageItemTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Items_On_Ground/Sword Item.png");
 	orcTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Enemies/Orc Idle.png");
 	orcDeathTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Enemies/Orc Death.png");
+	groundTexture.loadFromFile("C:/Users/vampi/source/repos/RGP204 Assignment One/Assets/Backgrounds/Jumping Block.png");
 }
 
 void RedStage::SetupSprites()
@@ -126,4 +136,19 @@ void RedStage::DelayedSetupCall()
 	SetupSprites();
 	SpawnEnemy();
 	SpawnItem();
+	SpawnBaseGround();
+}
+
+void RedStage::SpawnBaseGround()
+{
+	int spawnLocationX = this->backgroundSprite.getGlobalBounds().left;
+	int spawnLocationY = 900;
+
+	Ground ground(stageScrollSpeed, groundTexture);
+
+	ground.SetupPlatforms(sf::Vector2f (spawnLocationX, spawnLocationY));
+	ground.GetSprite().setScale(10, 1);
+	this->ground.push_back(ground);
+	std::cout << "Ground size: " << this->ground.size() << std::endl;
+	std::cout << "Ground position: " << this->ground.back().GetSprite().getPosition().x << std::endl;
 }
