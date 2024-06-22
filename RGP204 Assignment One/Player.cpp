@@ -2,9 +2,10 @@
 #include <iostream>
 #include "StageManager.hpp"
 #include "Orc.hpp"
+#include "Ground.hpp"
 
-Player::Player(sf::Texture& playerTex, sf::Texture& playerAttackTex,sf::Texture& playerJumpTex, const int& groundLevel) : playerSprite(playerTex), equipped(equippedItem::none), m_groundLevel(groundLevel), playerAnimation(&playerTex, sf::Vector2u(6, 9), 0.08f), animationRow(0), playerAnimationAttack(&playerAttackTex, sf::Vector2u(4, 1), .08f), playerJumpAnimation(&playerJumpTex, sf::Vector2u(6, 1), .08f)
-{	
+Player::Player(sf::Texture& playerTex, sf::Texture& playerAttackTex, sf::Texture& playerJumpTex, const int& groundLevel) : playerSprite(playerTex), equipped(equippedItem::none), m_groundLevel(groundLevel), playerAnimation(&playerTex, sf::Vector2u(6, 9), 0.08f), animationRow(0), playerAnimationAttack(&playerAttackTex, sf::Vector2u(4, 1), .08f), playerJumpAnimation(&playerJumpTex, sf::Vector2u(6, 1), .08f)
+{
 	playerSprite.setTextureRect(sf::IntRect(0, 0, 192, 192));//establish the default rect to avoid the full texture being used in the first frame
 	playerSprite.setScale(.8, .8);
 	playerSprite.setPosition(100, (m_groundLevel));
@@ -12,7 +13,7 @@ Player::Player(sf::Texture& playerTex, sf::Texture& playerAttackTex,sf::Texture&
 	swordHitBox.setFillColor(sf::Color::Black);
 	swordHitBox.setSize(sf::Vector2f(50, 75));
 	swordHitBox.setPosition(playerSprite.getPosition().x + playerSprite.getGlobalBounds().width, playerSprite.getPosition().y - playerSprite.getGlobalBounds().height / 2);
-	
+
 	playerAnimationAttack.SetOneTimeLoop(true);
 }
 
@@ -46,7 +47,7 @@ void Player::DoOneButtonAction(std::shared_ptr<Stage>& currentStage)
 	}
 	if (currentStage->GetStageType() == "Blue Stage" && m_isGrounded)
 	{
-		m_isGrounded = false;	
+		m_isGrounded = false;
 		UpdatePlayerAcceleration(sf::Vector2f(0, -10));
 		std::cout << "Player puts on boots" << std::endl;
 	}
@@ -58,7 +59,6 @@ void Player::DoOneButtonAction(std::shared_ptr<Stage>& currentStage)
 
 void Player::Draw(sf::RenderWindow& window, float frame_Time)
 {
-	std::cout << "Grounded: " << m_isGrounded << ", Attacking: " << m_isAttacking << ", Animation Row: " << animationRow << std::endl;
 
 	// First, determine the player's current state and set the appropriate animation row
 	if (!m_isGrounded)
@@ -117,13 +117,15 @@ void Player::Draw(sf::RenderWindow& window, float frame_Time)
 }
 
 
-bool Player::isGrounded(int groundlevel)
+bool Player::isGrounded(int groundlevel, std::shared_ptr<Stage>& currentStage)
 {
 	if (GetPlayerSprite().getPosition().y >= groundlevel - playerSprite.getGlobalBounds().height)
 	{
 		m_isGrounded = true;
 		playerSprite.setPosition(playerSprite.getPosition().x, groundlevel - playerSprite.getGlobalBounds().height);
 	}
+
+	CheckForGround(currentStage);
 
 	return m_isGrounded;
 }
@@ -157,7 +159,7 @@ void Player::CheckSwordCollision(std::vector<Orc>& Orcs)
 		if (swordHitBox.getGlobalBounds().intersects(Orc.GetOrcSprite().getGlobalBounds()))
 		{
 			Orc.SetIsDead(true);
-			std::cout<< "enemy is dead" << std::endl;
+			std::cout << "enemy is dead" << std::endl;
 		}
 	}
 }
@@ -167,14 +169,27 @@ void Player::SetIsDead(bool isDead)
 	this->isDead = isDead;
 }
 
-void CheckForGround(std::shared_ptr<Stage>& currentStage)
+void Player::CheckForGround(std::shared_ptr<Stage>& currentStage)
 {
-	if (currentStage->GetStageType() == "Boots Stage")
+	if (currentStage == nullptr)
+	{
+		return;
+	}	
+	if (equipped == equippedItem::boots)
+	{
+		std::cout << "current stage is boots" << std::endl;
+		auto& platforms = currentStage->GetPlatforms(); // Assuming this returns a reference
+		for (auto& platform : platforms)
 		{
-			auto platforms = currentStage->GetPlatforms();
-			for (int i; i< platforms.size(); i++
-				if ({playerSprite.GetGlobalBounds().intersects(platforms[i].getGlobalBounds()))
-				{	playerSprite.setPosition.y(platforms[i].getposition().y - playerSprite.GetGlobalBounds().height)	}
-	player.m_isGrounded = true; //Need to check if the x or the y length of the intersecting rectange are bigger to see if should fall or should be on top
+			std::cout << "iterated through a platform" << std::endl;
+			if (playerSprite.getGlobalBounds().intersects(platform.GetSprite().getGlobalBounds())) // Ensure you're comparing global bounds
+			{
+				std::cout << "collision detected with platform" << std::endl;
+				playerSprite.setPosition(playerSprite.getPosition().x, platform.GetSprite().getPosition().y - playerSprite.getGlobalBounds().height);
+				m_isGrounded = true; // Use 'm_isGrounded' if it's a member variable
+			}
 		}
-}
+	}
+}			
+
+

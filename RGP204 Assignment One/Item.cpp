@@ -15,8 +15,6 @@ void Sword::Draw(sf::RenderWindow& window, float frame_Time)
     // Apply the current frame's texture rectangle to the sword sprite
     swordSprite.setTextureRect(itemAnimator.GetUVRect());
 
-    std::cout << swordSprite.getTextureRect().left << std::endl;
-
     // Draw the sword sprite to the window
     window.draw(swordSprite);
 }
@@ -36,8 +34,6 @@ void Boots::Draw(sf::RenderWindow& window, float frame_Time)
 
     // Apply the current frame's texture rectangle to the sword sprite
     bootsSprite.setTextureRect(itemAnimator.GetUVRect());
-
-    std::cout << bootsSprite.getTextureRect().left << std::endl;
 
     // Draw the sword sprite to the window
     window.draw(bootsSprite);

@@ -21,7 +21,7 @@ public:
 	const sf::Sprite& GetPlayerSprite() const { return playerSprite; }
 	void DoOneButtonAction(std::shared_ptr<Stage>& currentStage);
 	void Draw(sf::RenderWindow& window, float frame_Time);
-	bool isGrounded(int groundLevel);
+	bool isGrounded(int groundLevel, std::shared_ptr<Stage>& currentStage);
 	void UpdatePlayerPosition(float m_frame_Time);
 	void UpdatePlayerAcceleration(sf::Vector2f accelerationToAdd);
 	void UpdatePlayerVelocity(sf::Vector2f velocityToAdd);
@@ -34,7 +34,7 @@ public:
 
 	void SetIsDead(bool isDead);
 	bool isDeadCheck() { return isDead; }
-
+	void CheckForGround(std::shared_ptr<Stage>& currentStage);
 	sf::Vector2f GetPlayerAcceleration() { return playerAcceleration; }	
 	Animation playerAnimation;
 	Animation playerAnimationAttack;

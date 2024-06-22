@@ -81,7 +81,6 @@ void StageManager::LoadStage(int& groundLevel)
 	}
 	m_stages.back()->LoadToBack();
 	m_stages.back()->DelayedSetupCall();
-	std::cout << "Stage loaded. New stage position : " << m_stages.back()->GetSprite().getPosition().x << std::endl;
 }
 
 

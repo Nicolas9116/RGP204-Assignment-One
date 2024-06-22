@@ -7,8 +7,6 @@ Orc::Orc(sf::Texture* orcTex, sf::Texture* orcDeathTex, int spawnX, int spawnY) 
 	orcSprite.setTexture(*orcTex);
 	orcSprite.setScale(1.0f, 1.0f);
 	orcSprite.setPosition(spawnX, spawnY);
-	std::cout << spawnX << " " << spawnY << std::endl;
-	std::cout << "Orc created" << std::endl;
 }
 
 
@@ -39,6 +37,5 @@ void Orc::CheckForPlayerOverlap(Player& player)
 	if (player.GetPlayerSprite().getGlobalBounds().intersects(orcSprite.getGlobalBounds()) && !isDead)
 	{
 		player.SetIsDead(true);
-		std::cout << "Player has died" << std::endl;
 	}
 }

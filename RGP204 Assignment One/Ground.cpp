@@ -1,9 +1,7 @@
 #include "Ground.hpp"
 
-Ground::Ground(sf::Vector2f position, int stageScrollSpeed) : stageScrollSpeed(stageScrollSpeed)
+Ground::Ground(int& stageScrollSpeed) : stageScrollSpeed(stageScrollSpeed)
 {
-    LoadTextures();
-    SetupSprite(position);
 }
 
 void Ground::LoadTextures()
@@ -22,7 +20,13 @@ void Ground::GroundUpdate(float frame_Time)
     groundSprite.move(stageScrollSpeed, 0);
 }
 
-void Ground::Draw(sf::RenderWindow window)
+void Ground::Draw(sf::RenderWindow& window)
 {
     window.draw(groundSprite);
+}
+
+void Ground::SetupPlatforms(sf::Vector2f& position)
+{
+    LoadTextures();
+    SetupSprite(position);
 }

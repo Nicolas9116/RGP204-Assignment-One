@@ -26,6 +26,7 @@ public:
 	virtual std::vector<Orc>& GetEnemiesVector() = 0;
 	virtual void SpawnItem() = 0;
 	virtual void DelayedSetupCall() = 0;
+	virtual std::vector<Ground>& GetPlatforms() = 0;
 private:
 
 };
@@ -47,8 +48,9 @@ public:
 	virtual void LoadToBack() override;
 	std::string GetStageType() override;
 	std::vector<Orc>& GetEnemiesVector() override { return enemies; }
-	std::vector<Ground>* GetPlatforms() { return platforms; }
+	std::vector<Ground>& GetPlatforms() override { return *platforms; }
 	void SpawnPlatforms();
+	void AddPlatformSpawnLocations();
 	void SpawnItem() override;
 	virtual void DelayedSetupCall() override;
 private:
@@ -89,9 +91,10 @@ public:
 	std::string GetStageType() override;
 	void SpawnItem() override;
 	virtual void DelayedSetupCall() override;
+	std::vector<Ground>& GetPlatforms() override { return *platforms; }
 
 private:
-	
+	std::vector<Ground>* platforms;
 
 	sf::Clock spawnClock;
 

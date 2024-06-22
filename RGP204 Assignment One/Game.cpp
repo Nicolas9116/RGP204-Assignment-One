@@ -36,7 +36,7 @@ void Game::Run()
 		player.UpdatePlayerVelocity(player.GetPlayerAcceleration());	
 		player.UpdatePlayerPosition(m_frame_Time);
 
-		if (!player.isGrounded(groundLevel))
+		if (!player.isGrounded(groundLevel, stageManager.GetCurrentStage()))
 		{
 			player.UpdatePlayerAcceleration(gravity);
 			player.UpdatePlayerPosition(m_frame_Time);
